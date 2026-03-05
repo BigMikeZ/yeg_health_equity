@@ -1,15 +1,15 @@
 # Project: Edmonton Health Equity
 # Script: 01_tidy_income_data
 # Author: Mike Zhang
-# Date: 2024-05-20
-# Purpose: Clean wide-format 2016 Census income data and engineer poverty metrics.
+# Date: 2026-03-05
+# Purpose: Tidy wide-format 2016 Census income data and engineer poverty metrics.
 # data source: https://data.edmonton.ca/Census/2016-Census-Population-by-Household-Income-Neighbo/jkjx-2hix/about_data
 
 #### .gitignore setup ####
 library(usethis)
 git_vaccinate()
 
-#### Read data####
+#### Read data ####
 library(tidyverse)
 library(janitor)
 yeg_raw <- read_csv("data_raw/2016_yeg_census_household_income.csv", 
