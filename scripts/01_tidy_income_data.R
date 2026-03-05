@@ -54,3 +54,5 @@ yeg_tidy <- yeg_raw |>
 head(yeg_tidy, 10)
 
 write_rds(yeg_tidy, "data_clean/tidy_2016_yeg_census_household_income.rds")
+
+yeg_tidy 

@@ -1,5 +1,5 @@
 # Project:Edmonton Health Equity
-# Script 02_tidy_lga_data
+# Script 02_clean_hypertension_data
 # Date: 2026-03-05
 # Purpose: Clean raw hypertension prevalence data and filter for Edmonton; prepare for a crosswalk to bridge both datasets
 # Data source: http://www.ahw.gov.ab.ca/IHDA_Retrieval/selectSubCategoryParameters.do
