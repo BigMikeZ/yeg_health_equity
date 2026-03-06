@@ -26,7 +26,7 @@ yeg_weighted_income <- yeg_income |>
       income == ">$250,000"              ~ 250000 * 1.25,
     )
   ) |> 
-  group_by(neighbourhood_name) |>
+  group_by(neighbourhood_number, neighbourhood_name) |>
   summarize(
     weighted_average_income = sum(income_midpoint * n_person) / sum(n_person)
   ) |>
@@ -104,10 +104,15 @@ setdiff(
 setdiff(                                    
   sort(unique(look_up_table_cleaned$neighbourhood_name)),
   sort(unique(yeg_weighted_income_cleaned$neighbourhood_name))
-) 
+)                               # Decided the matching is good enough
 
+look_up_table_cleaned <- look_up_table_cleaned |> 
+  mutate(
+    neighbourhood_number = LOCAL_CODE,
+    .keep = "unused"
+  )                             # Keep variable names consistent
+  
 write_rds(look_up_table_cleaned, "data_clean/yeg_neigh_slga_lookup.rds") # write for future reference 
 
-#### Join by mapping keys ####
 
 
