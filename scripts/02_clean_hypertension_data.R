@@ -38,4 +38,5 @@ lga_edmonton_labeled <- lga_raw |>
   ) |>
   filter(!is.na(geography_label))
 
+write_rds(lga_edmonton_labeled, "data_clean/clean_2016_lga_edmonton_hypertension")
 
