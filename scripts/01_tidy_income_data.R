@@ -12,7 +12,7 @@ git_vaccinate()
 #### Read data ####
 library(tidyverse)
 library(janitor)
-yeg_raw <- read_csv("data_raw/2016_yeg_census_household_income.csv", 
+yeg_raw <- read_csv("data/data_raw/2016_yeg_census_household_income.csv", 
                     na = c("", "NA", ".", "x", "..")) |> 
   clean_names()
 
@@ -53,6 +53,6 @@ yeg_tidy <- yeg_raw |>
   )
 head(yeg_tidy, 10)
 
-write_rds(yeg_tidy, "data_clean/tidy_2016_yeg_census_household_income.rds")
+write_rds(yeg_tidy, "data/data_clean/tidy_2016_yeg_census_household_income.rds")
 
 yeg_tidy 

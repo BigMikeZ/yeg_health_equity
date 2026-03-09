@@ -7,7 +7,7 @@
 #### Read data ####
 library(tidyverse)
 library(janitor)
-lga_raw <- read_csv("data_raw/2016_lga_standardized_hypertension_prevalence.csv") |> 
+lga_raw <- read_csv("data/data_raw/2016_lga_standardized_hypertension_prevalence.csv") |> 
   clean_names()
 str(lga_raw)
 head(lga_raw)
@@ -38,5 +38,5 @@ lga_edmonton_labeled <- lga_raw |>
   ) |>
   filter(!is.na(geography_label))
 
-write_rds(lga_edmonton_labeled, "data_clean/clean_2016_lga_edmonton_hypertension.rds")
+write_rds(lga_edmonton_labeled, "data/data_clean/clean_2016_lga_edmonton_hypertension.rds")
 
