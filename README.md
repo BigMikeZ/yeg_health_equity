@@ -18,8 +18,8 @@ For my first-ever formal GitHub repository AND self-directed data analytics proj
     *Neighborhood*
     *SLGS*
 - **Sources:**
-    *https://data.edmonton.ca/Census/2016-Census-Population-by-Household-Income-Neighbo/jkjx-2hix/about_data*
-    *http://www.ahw.gov.ab.ca/IHDA_Retrieval/selectCategory.do*
+    * https://data.edmonton.ca/Census/2016-Census-Population-by-Household-Income-Neighbo/jkjx-2hix/about_data *
+    * http://www.ahw.gov.ab.ca/IHDA_Retrieval/selectCategory.do *
 
 ## Methods
 - **Data Acquisition and Cleaning**
