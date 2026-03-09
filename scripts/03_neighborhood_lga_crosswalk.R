@@ -8,7 +8,7 @@ library(sf)
 library(tmap)
 
 #### Calculate weighted mid-points as a proxy of average income for each neightborhood ####
-yeg_income <- read_rds("data_clean/tidy_2016_yeg_census_household_income.rds")
+yeg_income <- read_rds("data/data_clean/tidy_2016_yeg_census_household_income.rds")
 yeg_weighted_income <- yeg_income |> 
   filter(income != "No response" & n_person > 0) |> 
   mutate(
@@ -108,11 +108,13 @@ setdiff(
 
 look_up_table_cleaned <- look_up_table_cleaned |> 
   mutate(
-    neighbourhood_number = LOCAL_CODE,
+    geography = LOCAL_CODE,
     .keep = "unused"
-  )                             # Keep variable names consistent
-  
-write_rds(look_up_table_cleaned, "data_clean/yeg_neigh_slga_lookup.rds") # write for future reference 
+  ) |>   # Keep variable names consistent
+  count(neighbourhood_name, geography) |> 
+  select(-n)
 
+write_rds(look_up_table_cleaned, "data/data_clean/yeg_neigh_slga_lookup.rds") # write for future reference 
+write_rds(yeg_weighted_income_cleaned, "data/data_clean/yeg_weighted_income_cleaned.rds") 
 
 
