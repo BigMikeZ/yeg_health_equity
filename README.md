@@ -1,4 +1,4 @@
-# Edmonton Health Equity: The Social Gradient of Diabetes
+# Edmonton Health Equity: The Social Gradient of Hypertension
 **Author:** Mike Zhang
 **Status:** In Progress (Week 2: Joining Data)
 
