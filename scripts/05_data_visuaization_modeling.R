@@ -62,20 +62,24 @@ yeg_joined_aggregated <- yeg_joined |>
 
 yeg_model_aggregate <- lm(age_standardize_rate ~ weighted_average_income, data = yeg_joined_aggregated)
 summary(yeg_model_aggregate)
+png("output/aggregate_diagnostic_plots.png", width = 800, height = 600)
 par(mfrow = c(nrow = 2, ncol = 2))
 yeg_aggregate_model_diagnostics <- plot(yeg_model_aggregate)
+dev.off()
 par(mfrow = c(1, 1))         # Diagnostics look funky (heteroskedasticity)
 
 # Use robust SE method on the original nested data (neighborhoods within SLGAs)
 yeg_model <- lm(age_standardize_rate ~ weighted_average_income, data = yeg_joined)
 summary(yeg_model)
+png("output/original_diagnostic_plots.png")
 par(mfrow = c(nrow = 2, ncol = 2))
 yeg_model_diagnostics <- plot(yeg_model)
-par(mfrow = c(1, 1))    # Diagnostics look much better but still some heteroskedasticity concern
+dev.off()
+par(mfrow = c(1, 1)) # Diagnostics look much better but still some heteroskedasticity concern
 yeg_model_robust <- coeftest(yeg_model, vcov = vcovCL, cluster = ~ geography)  # robust SE
 print(yeg_model_robust)
 
-# Save outputs
+# Save Scatterplot
 ggsave("output/final_correlation_plot.png", plot = yeg_plot)
-ggsave("output/original_diagnostic_plots.png", plot = yeg_model_diagnostics)
-ggsave("output/aggregate_diagnostic_plots.png", plot = yeg_aggregate_model_diagnostics)
+png("output/aggregate_diagnostic_plots.png")
+
