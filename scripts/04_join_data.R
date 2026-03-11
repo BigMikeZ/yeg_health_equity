@@ -19,4 +19,4 @@ yeg_joined <- yeg_weighted_income_cleaned |>
   inner_join(slga_hypertension, by = "geography") |> 
   select(-c(year, sex))
 
-
+yeg_joined <- write_rds(yeg_joined, "data/data_clean/yeg_joined.rds")
