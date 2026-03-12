@@ -82,8 +82,8 @@ print(yeg_model_robust)
 
 # Save Scatterplot & models
 write_rds(yeg_model_aggregate, "output/yeg_model_aggregate.rds")
-write_rds(yeg_model_robust, "output/yeg_model_robust")
-write_rds(yeg_model, "output/yeg_model")
+write_rds(yeg_model_robust, "output/yeg_model_robust.rds")
+write_rds(yeg_model, "output/yeg_model.rds")
 ggsave("output/final_correlation_plot.png", plot = yeg_plot)
 png("output/aggregate_diagnostic_plots.png")
 
