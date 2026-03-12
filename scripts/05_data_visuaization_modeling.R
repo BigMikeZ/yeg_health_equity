@@ -7,6 +7,7 @@ library(tidyverse)
 library(scales)
 library(lme4)
 library(lmtest)
+library(sandwich)
 
 yeg_joined <- read_rds("data/data_clean/yeg_joined.rds") |> 
   mutate(
@@ -79,7 +80,10 @@ par(mfrow = c(1, 1)) # Diagnostics look much better but still some heteroskedast
 yeg_model_robust <- coeftest(yeg_model, vcov = vcovCL, cluster = ~ geography)  # robust SE
 print(yeg_model_robust)
 
-# Save Scatterplot
+# Save Scatterplot & models
+write_rds(yeg_model_aggregate, "output/yeg_model_aggregate.rds")
+write_rds(yeg_model_robust, "output/yeg_model_robust")
+write_rds(yeg_model, "output/yeg_model")
 ggsave("output/final_correlation_plot.png", plot = yeg_plot)
 png("output/aggregate_diagnostic_plots.png")
 
