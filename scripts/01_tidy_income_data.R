@@ -48,7 +48,6 @@ yeg_tidy <- yeg_raw |>
     income == "x200_000_to_less_than_250_000" ~ "$200,000 to <$250,000",
     income == "x250_000_or_more" ~ ">$250,000",
     income == "no_response" ~ "No response",
-    TRUE ~ income
     ) 
   )
 head(yeg_tidy, 10)

@@ -57,13 +57,17 @@ yeg_joined_aggregated <- yeg_joined |>
   group_by(geography) |> 
   summarize(
     age_standardize_rate = mean(age_standardize_rate),
-    weighted_average_income = mean(weighted_average_income)
+    weighted_average_income = mean(weighted_average_income),
+    population = sum(population)
   ) |> 
   ungroup()
 
-yeg_model_aggregate <- lm(age_standardize_rate ~ weighted_average_income, data = yeg_joined_aggregated)
-summary(yeg_model_aggregate)
-png("output/aggregate_diagnostic_plots.png", width = 800, height = 600)
+yeg_weighted_aggregated_model <- lm(age_standardize_rate ~ weighted_average_income, 
+                          data = yeg_joined_aggregated,
+                          weights = population 
+                         )
+summary(yeg_weighted_aggregated_model)
+png("output/weighted_aggregate_diagnostic_plots.png", width = 800, height = 600)
 par(mfrow = c(nrow = 2, ncol = 2))
 yeg_aggregate_model_diagnostics <- plot(yeg_model_aggregate)
 dev.off()
@@ -81,7 +85,7 @@ yeg_model_robust <- coeftest(yeg_model, vcov = vcovCL, cluster = ~ geography)  #
 print(yeg_model_robust)
 
 # Save Scatterplot & models
-write_rds(yeg_model_aggregate, "output/yeg_model_aggregate.rds")
+write_rds(yeg_weighted_aggregated_model, "output/yeg_model_weighted_aggregate.rds")
 write_rds(yeg_model_robust, "output/yeg_model_robust.rds")
 write_rds(yeg_model, "output/yeg_model.rds")
 ggsave("output/final_correlation_plot.png", plot = yeg_plot)
