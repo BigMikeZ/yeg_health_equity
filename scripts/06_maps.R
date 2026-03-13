@@ -61,8 +61,7 @@ ggsave("output/side_comparison.png")
 yeg_model <- read_rds("output/yeg_model.rds")
   #  Create a cleaned map that only has the 260 neighborhoods in the income dataset
 map_residuals <- map_data |> 
-  right_join(joined_data, by = "neighbourhood_name")
-map_residuals <- map_residuals |> 
+  right_join(joined_data, by = "neighbourhood_name") |> 
   mutate(residuals = residuals(yeg_model)) |> 
   st_drop_geometry()
 map_residuals <- map_data |> 
