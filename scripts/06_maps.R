@@ -98,6 +98,6 @@ p3 <- map_residuals_binned |>
     title = "Model Performance Map by Edmonton Neighborhoods",
     caption = "As expected defined as within ± 1% prevalence"
   )
-ggsave("output/residual_map.png", plot = p3)
+ggsave("output/residual_map.png", plot = p3, bg = "white")
 
 
