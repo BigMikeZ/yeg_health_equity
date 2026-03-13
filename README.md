@@ -34,7 +34,7 @@ The core challenge involved in the project is **mismatched spatial data** betwee
     *Polulation*
     *Neighborhood*
     *SLGS*
-- **Sources:**
+- **References:**
     * https://data.edmonton.ca/Census/2016-Census-Population-by-Household-Income-Neighbo/jkjx-2hix/about_data 
     * http://www.ahw.gov.ab.ca/IHDA_Retrieval/selectCategory.do 
 
