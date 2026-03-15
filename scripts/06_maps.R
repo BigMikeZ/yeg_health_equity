@@ -68,11 +68,12 @@ map_residuals <- map_data |>
   left_join(map_residuals)
 
   # Create cut breaks for residuals
+sd_residuals <- sd(map_residuals$residuals, na.rm = TRUE)
 map_residuals_binned <- map_residuals |> 
   mutate(
     residuals_binned = cut(
       residuals, 
-      breaks = c(-Inf, -0.01, 0.01, Inf),
+      breaks = c(-Inf, -sd_residuals , sd_residuals , Inf),
       labels = c("Lower than Expected", "As Expected", "Higher than Expected")
     ) 
   ) |> 
