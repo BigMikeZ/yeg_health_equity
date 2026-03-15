@@ -57,7 +57,7 @@ yeg_joined_aggregated <- yeg_joined |>
   group_by(geography) |> 
   summarize(
     age_standardize_rate = mean(age_standardize_rate),
-    weighted_average_income = mean(weighted_average_income),
+    weighted_average_income = weighted.mean(weighted_average_income, population),
     population = sum(population)
   ) |> 
   ungroup()
@@ -68,8 +68,8 @@ yeg_weighted_aggregated_model <- lm(age_standardize_rate ~ weighted_average_inco
                          )
 summary(yeg_weighted_aggregated_model)
 png("output/weighted_aggregate_diagnostic_plots.png", width = 800, height = 600)
-par(mfrow = c(nrow = 2, ncol = 2))
-yeg_aggregate_model_diagnostics <- plot(yeg_model_aggregate)
+par(mfrow = c(2, 2))
+yeg_aggregate_model_diagnostics <- plot(yeg_weighted_aggregated_model)
 dev.off()
 par(mfrow = c(1, 1))         # Diagnostics look funky (heteroskedasticity)
 
@@ -77,7 +77,7 @@ par(mfrow = c(1, 1))         # Diagnostics look funky (heteroskedasticity)
 yeg_model <- lm(age_standardize_rate ~ weighted_average_income, data = yeg_joined)
 summary(yeg_model)
 png("output/original_diagnostic_plots.png")
-par(mfrow = c(nrow = 2, ncol = 2))
+par(mfrow = c(2, 2))
 yeg_model_diagnostics <- plot(yeg_model)
 dev.off()
 par(mfrow = c(1, 1)) # Diagnostics look much better but still some heteroskedasticity concern
