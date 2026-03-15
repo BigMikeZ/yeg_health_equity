@@ -14,9 +14,11 @@ head(yeg_weighted_income_cleaned)
 head(look_up_table_cleaned)
 head(slga_hypertension)
 
+nrow(yeg_weighted_income_cleaned)
 yeg_joined <- yeg_weighted_income_cleaned |> 
   inner_join(look_up_table_cleaned, by = "neighbourhood_name") |> 
   inner_join(slga_hypertension, by = "geography") |> 
   select(-c(year, sex))
+nrow(yeg_joined)  # From 276 to 260 neighborhoods after join
 
 yeg_joined <- write_rds(yeg_joined, "data/data_clean/yeg_joined.rds")
