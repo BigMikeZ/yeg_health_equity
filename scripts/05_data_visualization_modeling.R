@@ -1,7 +1,7 @@
 # Project: Edmonton Health Equity
 # Script: 05_data_visuaization_modeling
 # Date: 2026-03-10
-# Purpose: Visualizle and analyze data
+# Purpose: Visualize and analyze data
 
 library(tidyverse)
 library(scales)
@@ -84,7 +84,7 @@ par(mfrow = c(1, 1)) # Diagnostics look much better but still some heteroskedast
 yeg_model_robust <- coeftest(yeg_model, vcov = vcovCL, cluster = ~ geography)  # robust SE
 print(yeg_model_robust)
 
-# Save Scatterplot & models
+# Save Scatterplot & models results
 write_rds(yeg_weighted_aggregated_model, "output/yeg_model_weighted_aggregate.rds")
 write_rds(yeg_model_robust, "output/yeg_model_robust.rds")
 write_rds(yeg_model, "output/yeg_model.rds")
