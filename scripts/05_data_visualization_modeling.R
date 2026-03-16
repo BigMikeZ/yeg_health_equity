@@ -84,7 +84,7 @@ par(mfrow = c(1, 1)) # Diagnostics look much better but still some heteroskedast
 yeg_model_robust <- coeftest(yeg_model, vcov = vcovCL, cluster = ~ geography)  # robust SE
 print(yeg_model_robust)
 
-# Save Scatterplot & models results
+# Save Scatterplot & models 
 write_rds(yeg_weighted_aggregated_model, "output/yeg_model_weighted_aggregate.rds")
 write_rds(yeg_model_robust, "output/yeg_model_robust.rds")
 write_rds(yeg_model, "output/yeg_model.rds")
