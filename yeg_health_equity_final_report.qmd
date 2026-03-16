@@ -1,0 +1,102 @@
+---
+title: "Edmonton Health Equity Final Report"
+author: "Mike Zhang"
+date: 2026-03-16
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Content"
+    number-sections: true
+    theme: cosmo
+    code-fold: true
+    code-tools: true
+    fig-width: 8
+    fig-height: 5
+  pdf:
+    toc: true
+    number-sections: true
+    fig-pos: "H"
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(gt)
+
+```
+
+# Edmonton Health Equity: A Spatial Analysis of Income and Hypertension
+
+## Introduction
+
+## Data
+
+### Income Data
+
+```{r}
+#| include: false
+yeg_income <- read_csv("data/data_raw/2016_yeg_census_household_income.csv", 
+                    na = c("", "NA", ".", "x", ".."))
+yeg_income_tidy <- read_rds("data/data_raw/tidy_2016_yeg_census_household_income.rds", 
+                    na = c("", "NA", ".", "x", ".."))
+```
+
+The original household income data (`r yeg_income`) are from 2016 Edmonton Census, accessed through City of Edmonton Open Data, and are specific to each ward of every neighborhood. The original dataset is in wide format and is tidyed into long format for visualization and analysis (n = `r nrow(yeg_income_tidy)`). The 'No response' category of household income is filtered out, but for neighborhoods, such as Rutherford, the proportion of nonresponders is rather large and possibly not missing at random, which could be problematic.
+
+### Hypertension Data
+
+```{r}
+#| include: false
+yeg_hypertension <- read_csv("data/data_raw/2016_lga_standardized_hypertension_prevalence.csv", na = c("", "NA", ".", "x", ".."))
+```
+
+The 2016 hypertension prevalence data (`r yeg_hypertension`) is downloaded from Alberta IHDA under the section of 'chronic diseases.' To help eliminate age and sex-related confounding, all prevalence rates in the dataset are age and sex standardized, and are grouped by Sub-Local Geographic Area (SLGA) based on AHS's definition (n = `r nrow(yeg_hypertension)`).
+
+### GeoJSON Data
+
+The two GeoJSON files (`geojson_files/yeg_neigh.geojson` and `geojson_files/yeg_slga.geojson`), which are Edmonton neighborhood boundaries and SLGA boundaries downloaded from the Edmonton City Open Data Portaland AHS's Geographic Information Systems (GIS). However, they both reflect the current reality of Edmonton neighborhoods and SLGAs, which may not completely align with their geographical boundaries in 2016.
+
+### The Spatial Mismatch Problem
+
+```{r}
+#| include: false
+yeg_joined <- read_rds("data/data_clean/yeg_joined.rds")
+```
+
+Due to the fact the predictor/income data (`r yeg_income`) and the outcome/hypertension data (`r yeg_hypertension`) have different data resolutions with the former on the neighborhood level while the latter on the SLGA level, a crosswalk is needed to join the two datasets. 
+
+## Methods
+
+### Income Estimation
+
+Since the household income variabe is binned in my dataset, I proceeded to use the mid-point of each bin as a rough estimate. For the open-ended top bin, I opted to multiply the lower bound by 1.25 for conveience, which might be inaccurate, and that is one of the problems dealing with census data. Weighted average household income of each neighborhood is then calculate using the formula `sum(income_midpoint * n_person) / sum(n_person)` after grouped the data by neighborhoods instead of wards.
+
+### Crosswalk Construction
+By joining the two geojson files and then dropping their geometries, I created the crosswalk with neighborhoods nested within their corresponding SLGAs. However, several inconsistencies and mismatches are spotted potentially due to different years used or categorization rules among the crosswalk. After iterations of identifying problems, such as symbol & vs. and, partial matches, and fuzzy suffixes as well as prefixes, I eventually ended up with `r nrow(yeg_joined)` and made the the judgement call that it's high-fidelity enough for my analysis.
+
+### Modeling Approach
+
+## Results
+
+## Discussions
+
+## Conclusions
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
