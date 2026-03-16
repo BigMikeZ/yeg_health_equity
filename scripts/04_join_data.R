@@ -21,4 +21,4 @@ yeg_joined <- yeg_weighted_income_cleaned |>
   select(-c(year, sex))
 nrow(yeg_joined)  # From 276 to 260 neighborhoods after join
 
-yeg_joined <- write_rds(yeg_joined, "data/data_clean/yeg_joined.rds")
+write_rds(yeg_joined, "data/data_clean/yeg_joined.rds")
