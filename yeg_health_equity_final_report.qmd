@@ -136,7 +136,7 @@ yeg_joined |>
   geom_smooth(method = "lm", se = FALSE) +
   scale_x_continuous(
     breaks = seq(25000, 200000, by = 25000),
-    labels = label_dollar()
+    labels = label_dollar(suffix = "k")
   ) +
   scale_y_continuous(
     labels = label_percent()
@@ -151,13 +151,21 @@ yeg_joined |>
   ) 
 ```
 
+Since the hypertension prevalence is on the zone level, slight jitter is added to prevent overplotting. Similarly, alpha and size of data points are also adjusted according to neighborhood population. The direction of the relationship is expected according to the scatter plot and smooth line: household income is negatively correlated to hypertension prevalence in Edmonton zones. The spread among certain zones are quite evident.
+
 ## Regression Results
 ```{r}
 #| label: tbl-regression
 #| tbl-cap: "Regression model summary"
+library(broom)
+library(knitr)
+yeg_model_robust <- read_rds("output/yeg_model_robust.rds")
+yeg_model_robust |>
+  tidy() |> 
+  kable(digits = 5)
 ```
 
-Since the hypertension prevalence is on the zone level, slight jitter is added to prevent overplotting. Similarly, alpha and size of data points are also adjusted according to neighborhood population. The direction of the relationship is expected according to the scatter plot and smooth line: household income is negatively correlated to hypertension prevalence in Edmonton zones. The spread among certain zones are quite evident.
+Results of the final regression model using the clustered robust standard error is displayed on the table above. The output shows that household income is significantly related to hypertension prevalence rate in Edmonton (n = 15, p = 0.0056). Specifically, an $1,000 increase in household income is associated with a 0.023 percentage point decrease in hypertension prevalence rate in Edmonton. 
 
 # Discussions
 
