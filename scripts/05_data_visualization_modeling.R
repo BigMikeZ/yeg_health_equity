@@ -57,12 +57,12 @@ yeg_joined_aggregated <- yeg_joined |>
   group_by(geography) |> 
   summarize(
     age_standardize_rate = mean(age_standardize_rate),
-    weighted_average_income = weighted.mean(weighted_average_income, population),
+    weighted_average_income_k = weighted.mean(weighted_average_income_k, population),
     population = sum(population)
   ) |> 
   ungroup()
 
-yeg_weighted_aggregated_model <- lm(age_standardize_rate ~ weighted_average_income, 
+yeg_weighted_aggregated_model <- lm(age_standardize_rate ~ weighted_average_income_k, 
                           data = yeg_joined_aggregated,
                           weights = population 
                          )
@@ -74,7 +74,7 @@ dev.off()
 par(mfrow = c(1, 1))         # Diagnostics look funky (heteroskedasticity)
 
 # Use robust SE method on the original nested data (neighborhoods within SLGAs)
-yeg_model <- lm(age_standardize_rate ~ weighted_average_income, data = yeg_joined)
+yeg_model <- lm(age_standardize_rate ~ weighted_average_income_k, data = yeg_joined)
 summary(yeg_model)
 png("output/original_diagnostic_plots.png")
 par(mfrow = c(2, 2))
