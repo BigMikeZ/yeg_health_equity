@@ -65,7 +65,7 @@ The two GeoJSON files (`geojson_files/yeg_neigh.geojson` and `geojson_files/yeg_
 yeg_joined <- read_rds("data/data_clean/yeg_joined.rds")
 ```
 
-Due to the fact the predictor/income data (`yeg_income`) and the outcome/hypertension data (`yeg_hypertension`) have different data resolutions with the former on the neighborhood level while the latter on the SLGA level, a crosswalk is needed to join the two datasets. 
+Due to the fact the predictor/income data (`yeg_income`) and the outcome/hypertension data (`yeg_hypertension`) have different data resolutions with the former on the neighborhood level while the latter on the SLGA level, a crosswalk is needed to join the two datasets.
 
 # Methods
 
@@ -74,9 +74,22 @@ Due to the fact the predictor/income data (`yeg_income`) and the outcome/hyperte
 Since the household income variabe is binned in my dataset, I proceeded to use the mid-point of each bin as a rough estimate. For the open-ended top bin, I opted to multiply the lower bound by 1.25 for conveience, which might be inaccurate, and that is one of the problems dealing with census data. Weighted average household income of each neighborhood is then calculate using the formula `sum(income_midpoint * n_person) / sum(n_person)` after grouped the data by neighborhoods instead of wards.
 
 ## Crosswalk Construction
-By joining the two geojson files and then dropping their geometries, I created the crosswalk with neighborhoods nested within their corresponding SLGAs. However, several inconsistencies and mismatches are spotted potentially due to different years used or categorization rules among the crosswalk. After iterations of identifying problems, such as symbol & vs. and, partial matches, and fuzzy suffixes as well as prefixes, I eventually ended up with `r nrow(yeg_joined)` and made the the judgement call that it's high-fidelity enough for my analysis.
+
+By joining the two geoJSON files and then dropping their geometries, I created the crosswalk with neighborhoods nested within their corresponding SLGAs. However, several inconsistencies and mismatches are spotted potentially due to different years used or categorization rules among the crosswalk. After iterations of identifying problems, such as symbol & vs. and, partial matches, and fuzzy suffixes as well as prefixes, I eventually ended up with `r nrow(yeg_joined)` and made the the judgement call that it's high-fidelity enough for my analysis.
 
 ## Modeling Approach
+
+Again, since the two data I joined have different resolutions (neighborhood vs. SLGA), a typical mixed-effect approach for nested data using `lme()` is not applicable as there's virtually no within-SLGA variance in hypertension prevalence rate. Also, a simple linear regression with `lm()` is also inaccurate due to violation of independence assumption (neighborhoods nested in SLGAs). Consequently, I first proceeded to carry out a simple linear regression on the aggregated data, where average household income is calculated on the SLGA level and weighted by neighborhood populations. However, the model loses a huge chunk of information (n = `r nrow(yeg_hypertension)`), and the diagnostic plots show signs of heteroskedasticity.
+
+```         
+![Aggregated model diagnostics](output/weighted_aggregate_diagnostic_plots.png)
+```
+
+A clustered robust standard error approach is conducted on the original simple linear model, which has more acceptable diagnostics, to solve both issues of heteroskedasticity and nested data.
+
+```         
+![Original Model Diagnostics](output/original_diagnostic_plots.png)
+```
 
 # Results
 

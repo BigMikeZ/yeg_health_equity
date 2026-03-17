@@ -89,5 +89,3 @@ write_rds(yeg_weighted_aggregated_model, "output/yeg_model_weighted_aggregate.rd
 write_rds(yeg_model_robust, "output/yeg_model_robust.rds")
 write_rds(yeg_model, "output/yeg_model.rds")
 ggsave("output/final_correlation_plot.png", plot = yeg_plot)
-
-
