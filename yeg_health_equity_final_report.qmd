@@ -28,7 +28,7 @@ execute:
 #| include: false
 library(tidyverse)
 library(gt)
-
+library(gtsummary)
 ```
 
 # Introduction
@@ -38,6 +38,7 @@ library(gt)
 ## Income Data
 
 ```{r}
+#| label: income data
 #| include: false
 yeg_income <- read_csv("data/data_raw/2016_yeg_census_household_income.csv")
 yeg_income_tidy <- read_rds("data/data_clean/tidy_2016_yeg_census_household_income.rds")
@@ -48,6 +49,7 @@ The original household income data (`yeg_income`) are from 2016 Edmonton Census,
 ## Hypertension Data
 
 ```{r}
+#| label: hypertension data
 #| include: false
 yeg_hypertension <- read_csv("data/data_raw/2016_lga_standardized_hypertension_prevalence.csv")
 ```
@@ -61,6 +63,7 @@ The two GeoJSON files (`geojson_files/yeg_neigh.geojson` and `geojson_files/yeg_
 ## The Spatial Mismatch Problem
 
 ```{r}
+#| label: joined data
 #| include: false
 yeg_joined <- read_rds("data/data_clean/yeg_joined.rds")
 ```
@@ -81,17 +84,74 @@ By joining the two geoJSON files and then dropping their geometries, I created t
 
 Again, since the two data I joined have different resolutions (neighborhood vs. SLGA), a typical mixed-effect approach for nested data using `lme()` is not applicable as there's virtually no within-SLGA variance in hypertension prevalence rate. Also, a simple linear regression with `lm()` is also inaccurate due to violation of independence assumption (neighborhoods nested in SLGAs). Consequently, I first proceeded to carry out a simple linear regression on the aggregated data, where average household income is calculated on the SLGA level and weighted by neighborhood populations. However, the model loses a huge chunk of information (n = `r nrow(yeg_hypertension)`), and the diagnostic plots show signs of heteroskedasticity.
 
-```         
-![Aggregated model diagnostics](output/weighted_aggregate_diagnostic_plots.png)
-```
+![Weighted aggregated model diagnostics](output/weighted_aggregate_diagnostic_plots.png)
 
 A clustered robust standard error approach is conducted on the original simple linear model, which has more acceptable diagnostics, to solve both issues of heteroskedasticity and nested data.
 
-```         
-![Original Model Diagnostics](output/original_diagnostic_plots.png)
-```
+![Original model diagnostics](output/original_diagnostic_plots.png)
+
+## Residual Mapping
+
+Thanks to the geoJSON files, a spatial residual plot is made to display model performance geographically. By binning the model residuals based on the standard deviation (± 1 SD of residuals), I then created the map where SLGAs with hypertension rate higher or lower than what the model predicts are highlighted by different colors.
+
+![Spatial residual mapping](output/residual_map.png)
 
 # Results
+
+## Descriptive Statistics
+
+```{r}
+#| label: tbl-descriptive
+#| tbl-cap: "Descriptive statistics for key variables by zone"
+yeg_joined_aggregated <- read_rds("data/data_clean/yeg_joined_aggregated.rds")
+yeg_joined_aggregated |> 
+  ungroup() |> 
+  select(weighted_average_income, age_standardize_rate, population) |>
+  tbl_summary(
+    statistic = list(all_continuous() ~ "{mean} ({sd}) [{min}, {max}]"),
+    label = list(
+      weighted_average_income ~ "Weighted Average Income ($)",
+      age_standardize_rate ~ "Hypertension Prevalence (%)",
+      population ~ "Zone Population"
+    )
+  )
+```
+
+As shown in the label, zone-level average household income weighted by population ranges from \$62,151 to \$131,608, suggesting substantial socioeconomic variation across Edmonton. Hypertension prevalence similarly varied from about %18 to %23. Zone populations differed considerably, which motivates the use of population weights in the regression.
+
+## Income and Hypertension: Correlation
+
+```{r}
+#| label: scatter plot
+#| fig-cap: "Relationship between household income and hypertension prevalence across Edmonton neighborhoods (colorred by SLGA zones)"
+yeg_joined <- read_rds("data/data_clean/yeg_joined.rds") |> 
+  mutate(
+    age_standardize_rate = age_standardize_rate / 100, # Convert to decimals 
+    geography = factor(geography )
+  ) |> 
+  ungroup()
+yeg_joined |> 
+  ggplot(aes(x = weighted_average_income, y = age_standardize_rate)) + 
+  geom_jitter(aes(alpha = population, size = population, color = geography), height = 0.002) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_x_continuous(
+    breaks = seq(25000, 200000, by = 25000),
+    labels = label_dollar()
+  ) +
+  scale_y_continuous(
+    labels = label_percent()
+  ) +
+  theme(legend.position = "none") +
+  labs(
+    title = "Relationship between Household Income and Hypertension Prevalanece 
+    in Edmonton Neighborhoods",
+    x = "Weighted average household income",
+    y = "Age and sex standardized hypertension prevalence", 
+    caption = "Data sources: City of Edmonton & Alberta IHDA"
+  ) 
+```
+
+Since the hypertension prevalence is on the zone level, slight jitter is added to prevent overplotting. Similarly, alpha and size of data points are also adjusted according to neighborhood population. The direction of the relationship is expected according to the scatter plot and smooth line: household income is negatively correlated to hypertension prevalence in Edmonton zones. The spread among certain zones are quite evident.
 
 # Discussions
 
