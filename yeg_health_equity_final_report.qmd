@@ -151,6 +151,12 @@ yeg_joined |>
   ) 
 ```
 
+## Regression Results
+```{r}
+#| label: tbl-regression
+#| tbl-cap: "Regression model summary"
+```
+
 Since the hypertension prevalence is on the zone level, slight jitter is added to prevent overplotting. Similarly, alpha and size of data points are also adjusted according to neighborhood population. The direction of the relationship is expected according to the scatter plot and smooth line: household income is negatively correlated to hypertension prevalence in Edmonton zones. The spread among certain zones are quite evident.
 
 # Discussions
