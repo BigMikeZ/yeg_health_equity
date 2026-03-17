@@ -33,7 +33,7 @@ yeg_joined |>
 
 yeg_plot <- yeg_joined |> 
   ggplot(aes(x = weighted_average_income, y = age_standardize_rate)) + 
-  geom_jitter(aes(alpha = population, size = population, color = geography), height = 0.05) +
+  geom_jitter(aes(alpha = population, size = population, color = geography), height = 0.002) +
   geom_smooth(method = "lm", se = FALSE) +
   scale_x_continuous(
     breaks = seq(25000, 200000, by = 25000),
