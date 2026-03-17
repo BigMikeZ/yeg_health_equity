@@ -105,8 +105,11 @@ Thanks to the geoJSON files, a spatial residual plot is made to display model pe
 #| tbl-cap: "Descriptive statistics for key variables by zone"
 yeg_joined_aggregated <- read_rds("data/data_clean/yeg_joined_aggregated.rds")
 yeg_joined_aggregated |> 
-  ungroup() |> 
-  select(weighted_average_income, age_standardize_rate, population) |>
+  select(-geography) |> 
+  mutate(
+    weighted_average_income = weighted_average_income_k * 1000,
+    .keep = "unused"
+  ) |> 
   tbl_summary(
     statistic = list(all_continuous() ~ "{mean} ({sd}) [{min}, {max}]"),
     label = list(
@@ -165,7 +168,7 @@ yeg_model_robust |>
   kable(digits = 5)
 ```
 
-Results of the final regression model using the clustered robust standard error is displayed on the table above. The output shows that household income is significantly related to hypertension prevalence rate in Edmonton (n = 15, p = 0.0056). Specifically, an $1,000 increase in household income is associated with a 0.023 percentage point decrease in hypertension prevalence rate in Edmonton. 
+Results of the final regression model using the clustered robust standard error is displayed on the table above. The output shows that household income is significantly related to hypertension prevalence rate in Edmonton (n = 15, p = 0.0056). Specifically, an $1,000 increase in household income is associated with a 0.023 percentage point decrease in hypertension prevalence rate in Edmonton SLGAs.
 
 # Discussions
 
