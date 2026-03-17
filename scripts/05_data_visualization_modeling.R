@@ -85,6 +85,7 @@ yeg_model_robust <- coeftest(yeg_model, vcov = vcovCL, cluster = ~ geography)  #
 print(yeg_model_robust)
 
 # Save Scatterplot & models 
+write_rds(yeg_joined_aggregated, "data/data_clean/yeg_joined_aggregated.rds")
 write_rds(yeg_weighted_aggregated_model, "output/yeg_model_weighted_aggregate.rds")
 write_rds(yeg_model_robust, "output/yeg_model_robust.rds")
 write_rds(yeg_model, "output/yeg_model.rds")
