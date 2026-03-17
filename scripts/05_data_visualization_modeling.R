@@ -32,12 +32,12 @@ yeg_joined |>
   geom_histogram(binwidth = 0.002)
 
 yeg_plot <- yeg_joined |> 
-  ggplot(aes(x = weighted_average_income, y = age_standardize_rate)) + 
+  ggplot(aes(x = weighted_average_income_k, y = age_standardize_rate)) + 
   geom_jitter(aes(alpha = population, size = population, color = geography), height = 0.002) +
   geom_smooth(method = "lm", se = FALSE) +
   scale_x_continuous(
-    breaks = seq(25000, 200000, by = 25000),
-    labels = label_dollar()
+    labels = label_dollar(suffix = "K"),
+    breaks = seq(25, 200, by = 25)
   ) +
   scale_y_continuous(
     labels = label_percent()
