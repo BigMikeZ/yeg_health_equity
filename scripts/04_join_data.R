@@ -20,7 +20,7 @@ yeg_joined <- yeg_weighted_income_cleaned |>
   inner_join(slga_hypertension, by = "geography") |> 
   select(-c(year, sex)) |> 
   mutate(
-    weighted_average_income_k = weighted_average_income / 1000
+    weighted_average_income_10k = weighted_average_income / 10000
   )
 nrow(yeg_joined)  # From 276 to 260 neighborhoods after join
 
