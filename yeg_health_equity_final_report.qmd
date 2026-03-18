@@ -107,7 +107,7 @@ yeg_joined_aggregated <- read_rds("data/data_clean/yeg_joined_aggregated.rds")
 yeg_joined_aggregated |> 
   select(-geography) |> 
   mutate(
-    weighted_average_income = weighted_average_income_k * 1000,
+    weighted_average_income = weighted_average_income_10k * 10000,
     .keep = "unused"
   ) |> 
   tbl_summary(
@@ -139,7 +139,7 @@ yeg_joined |>
   geom_smooth(method = "lm", se = FALSE) +
   scale_x_continuous(
     breaks = seq(25000, 200000, by = 25000),
-    labels = label_dollar(suffix = "k")
+    labels = label_dollar()
   ) +
   scale_y_continuous(
     labels = label_percent()
@@ -157,6 +157,7 @@ yeg_joined |>
 Since the hypertension prevalence is on the zone level, slight jitter is added to prevent overplotting. Similarly, alpha and size of data points are also adjusted according to neighborhood population. The direction of the relationship is expected according to the scatter plot and smooth line: household income is negatively correlated to hypertension prevalence in Edmonton zones. The spread among certain zones are quite evident.
 
 ## Regression Results
+
 ```{r}
 #| label: tbl-regression
 #| tbl-cap: "Regression model summary"
@@ -168,7 +169,78 @@ yeg_model_robust |>
   kable(digits = 5)
 ```
 
-Results of the final regression model using the clustered robust standard error is displayed on the table above. The output shows that household income is significantly related to hypertension prevalence rate in Edmonton (n = 15, p = 0.0056). Specifically, an $1,000 increase in household income is associated with a 0.023 percentage point decrease in hypertension prevalence rate in Edmonton SLGAs.
+Results of the final regression model using the clustered robust standard error is displayed on the table above (260 neighborhoods within 15 zones). The output shows that household income is significantly related to hypertension prevalence rate in Edmonton (p = 0.0056). Specifically, an \$10,000 increase in household income is associated with a 0.23 percentage point decrease in hypertension prevalence rate in Edmonton SLGAs.
+
+## Spatial Patterns
+
+```{r}
+#| label: fig-maps
+#| fig-cap: "Side-by-side comparison of household income and hypertension prevalence in Edmonton"
+#| fig-width: 12
+library(sf)
+library(patchwork)
+neigh <- st_read("geojson_files/yeg_neigh.geojson") 
+yeg_joined <- yeg_joined |> 
+  mutate(neighbourhood_number = as.character(neighbourhood_number))
+map_data <- neigh |> 
+  left_join(yeg_joined, by = "neighbourhood_number") 
+p1 <- map_data |> 
+  ggplot() +
+  geom_sf(aes(fill = weighted_average_income), color = "white", size = 0.05) +
+  scale_fill_viridis_c(
+    option = "mako", 
+    name = "Household Income($)", 
+    labels = scales::label_dollar(),
+    na.value = "grey90") +
+  labs(title = "Average Neighborhood Household Income") +
+  theme_void()
+p2 <- map_data |> 
+  mutate(
+    age_standardize_rate = age_standardize_rate / 100
+  ) |> 
+  ggplot() +
+  geom_sf(aes(fill = age_standardize_rate), color = "white", size = 0.05) +
+  scale_fill_viridis_c(
+    option = "rocket", 
+    direction = -1, 
+    name = "Hypertension (%)", 
+    labels = scales::label_percent(),
+    na.value = "grey90"
+    ) +
+  labs(title = "Zone-level Hypertension Prevalence") +
+  theme_void()
+p1 + p2 + 
+  plot_annotation(
+    title = "Side-by-Side Comparison of Average Household Income and Hypertension 
+    Prevalence in Edmonton",
+    caption = "Data sources: City of Edmonton & Alberta IHDA"
+  )
+```
+
+```{r}
+#| label: fig-residuals
+#| fig-cap: "Spatial residual map: neighborhoods performing above and below model expectations"
+map_residuals_binned <- read_rds("data/data_clean/residuals_data")
+map_residuals_binned |> 
+  ggplot() +
+  geom_sf(aes(fill = residuals_binned), color = "white", size = 0.1) +
+  scale_fill_manual(
+    values = c(
+      "Lower than Expected" = "#2c7bb6",  
+      "As Expected" = "#ffffbf",         
+      "Higher than Expected" = "#d7191c", 
+      "No Data" = "#d3d3d3"
+    ),
+    name = "Hypertension Prevalence"
+  ) +
+  theme_void() +
+  labs(
+    title = "Model Performance Map by Edmonton Neighborhoods",
+    caption = "As expected defined as within ± 1% prevalence"
+  )
+```
+
+Based on the side-by-side comparison plot, zone seems to have the lowest hypertension prevalence and highest household income among the SLGA zones. On the other hand, Abbottsfield has the second highest hypertension prevalence with the lowest household income. The spatial residual plot shows that most neighborhoods have hypertension prevalence rates expected by the model. However, there are a few neighborhoods that are off by more than one standard deviation of the model residuals.
 
 # Discussions
 
