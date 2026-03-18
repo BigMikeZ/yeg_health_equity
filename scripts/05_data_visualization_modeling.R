@@ -32,12 +32,12 @@ yeg_joined |>
   geom_histogram(binwidth = 0.002)
 
 yeg_plot <- yeg_joined |> 
-  ggplot(aes(x = weighted_average_income_k, y = age_standardize_rate)) + 
+  ggplot(aes(x = weighted_average_income_10k, y = age_standardize_rate)) + 
   geom_jitter(aes(alpha = population, size = population, color = geography), height = 0.002) +
   geom_smooth(method = "lm", se = FALSE) +
   scale_x_continuous(
-    labels = label_dollar(suffix = "K"),
-    breaks = seq(25, 200, by = 25)
+    labels = label_dollar(accuracy = 1, suffix = "0,000"),
+    breaks = seq(2.5, 20, by = 2.5)
   ) +
   scale_y_continuous(
     labels = label_percent()
@@ -57,12 +57,12 @@ yeg_joined_aggregated <- yeg_joined |>
   group_by(geography) |> 
   summarize(
     age_standardize_rate = mean(age_standardize_rate),
-    weighted_average_income_k = weighted.mean(weighted_average_income_k, population),
+    weighted_average_income_10k = weighted.mean(weighted_average_income_10k, population),
     population = sum(population)
   ) |> 
   ungroup()
 
-yeg_weighted_aggregated_model <- lm(age_standardize_rate ~ weighted_average_income_k, 
+yeg_weighted_aggregated_model <- lm(age_standardize_rate ~ weighted_average_income_10k, 
                           data = yeg_joined_aggregated,
                           weights = population 
                          )
@@ -74,7 +74,7 @@ dev.off()
 par(mfrow = c(1, 1))         # Diagnostics look funky (heteroskedasticity)
 
 # Use robust SE method on the original nested data (neighborhoods within SLGAs)
-yeg_model <- lm(age_standardize_rate ~ weighted_average_income_k, data = yeg_joined)
+yeg_model <- lm(age_standardize_rate ~ weighted_average_income_10k, data = yeg_joined)
 summary(yeg_model)
 png("output/original_diagnostic_plots.png")
 par(mfrow = c(2, 2))
@@ -87,7 +87,7 @@ print(yeg_model_robust)
 # Save Scatterplot & models 
 write_rds(yeg_joined_aggregated, "data/data_clean/yeg_joined_aggregated.rds")
 write_rds(yeg_weighted_aggregated_model, "output/yeg_model_weighted_aggregate.rds")
-write_rds(yeg_model_robust, "output/yeg_model_robust.rds")
 write_rds(yeg_model, "output/yeg_model.rds")
+write_rds(yeg_model_robust, "output/yeg_model_robust.rds")
 ggsave("output/final_correlation_plot.png", plot = yeg_plot)
 
