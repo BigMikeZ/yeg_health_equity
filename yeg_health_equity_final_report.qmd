@@ -80,7 +80,7 @@ Since the household income variabe is binned in my dataset, I proceeded to use t
 
 ## Crosswalk Construction
 
-By joining the two geoJSON files and then dropping their geometries, I created the crosswalk with neighborhoods nested within their corresponding SLGAs. However, several inconsistencies and mismatches are spotted potentially due to different years used or categorization rules among the crosswalk. After iterations of identifying problems, such as symbol & vs. and, partial matches, and fuzzy suffixes as well as prefixes, I eventually ended up with `r nrow(yeg_joined)` and made the the judgement call that it's high-fidelity enough for my analysis.
+By joining the two geoJSON files and then dropping their geometries, I created the crosswalk with neighborhoods nested within their corresponding SLGAs. However, several inconsistencies and mismatches are spotted potentially due to different years used or categorization rules among the crosswalk. After iterations of identifying problems, such as symbol & vs. and, partial matches, and fuzzy suffixes as well as prefixes, I eventually ended up with `r nrow(yeg_joined)` observations and made the the judgement call that it's high-fidelity enough for my analysis.
 
 ## Modeling Approach
 
@@ -128,7 +128,7 @@ As shown in the tabel, zone-level average household income weighted by populatio
 
 ```{r}
 #| label: scatter-plot
-#| fig-cap: "Relationship between household income and hypertension prevalence across Edmonton neighborhoods (colorred by SLGA zones)"
+#| fig-cap: "Relationship between household income and hypertension prevalence across Edmonton neighborhoods (colored by SLGA zones)"
 yeg_joined <- read_rds("data/data_clean/yeg_joined.rds") |> 
   mutate(
     age_standardize_rate = age_standardize_rate / 100, # Convert to decimals 
@@ -148,7 +148,7 @@ yeg_joined |>
   ) +
   theme(legend.position = "none") +
   labs(
-    title = "Relationship between Household Income and Hypertension Prevalanece 
+    title = "Relationship between Household Income and Hypertension Prevalence 
     in Edmonton Neighborhoods",
     x = "Weighted average household income",
     y = "Age and sex standardized hypertension prevalence", 
@@ -250,11 +250,11 @@ Overall, there's a negative relationship between household income and hypertensi
 
 # Limitations
 
-Several limitations exist for this analysis besides the aforementioned spatial mismatched between predictor and outcome data. First of all, the data analyzed are from 2016 and the might differ from today's reality, of which one aspect is the reclassified/expanded neighborhoods and zones in the current jeoJSON files used to create the crosswalk. In addition, though the prevalence is age- and sex-standardized, income is the only predictor and mostly likely the only factor that influences hypertension prevalence. Another problem is that household income data are from census and binned. Mid-points of bins as well as 1.25 times the lower boundary of the top open-ended bin are used as a rough estimate for average income calculation, but they might be susceptible to measurement errors.
+Several limitations exist for this analysis besides the aforementioned spatial mismatched between predictor and outcome data. First of all, the data analyzed are from 2016 and the might differ from today's reality, of which one aspect is the reclassified/expanded neighborhoods and zones in the current jeoJSON files used to create the crosswalk. In addition, though the prevalence is age- and sex-standardized, income is the only predictor and mostly likely not the only factor that influences hypertension prevalence in the real world. Another problem is that household income data are from census and binned. Mid-points of bins as well as 1.25 times the lower boundary of the top open-ended bin are used as a rough estimate for average income calculation, but they might be susceptible to measurement errors.
 
 # Conclusions
 
-In conclusion, this mini self-directed spatial analysis projects illustrates the negative relationship between household income and hypertension prevalence in Edmonton in the year 2016. It helps the author practice the whole GitHub workflow, exercise data analytics techniques, and barely adds anything to the abundant current literature on health inequity. Follow-up analyses after the most up-to-date are made available could be an interesting next-step to examine whether this inequity is amplified or alleviated in 2026.
+In conclusion, this mini self-directed spatial analysis projects illustrates the negative relationship between household income and hypertension prevalence in Edmonton in the year 2016. It helps the author practice the whole GitHub workflow, exercise data analytics techniques, and barely adds anything to the abundant current literature on health inequity. Follow-up analyses after the most up-to-date data are made available could be an interesting next-step to examine whether this inequity is amplified or alleviated in 2026.
 
 # References
 
