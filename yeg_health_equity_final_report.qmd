@@ -58,7 +58,7 @@ The 2016 hypertension prevalence data (`yeg_hypertension`) is downloaded from Al
 
 ## GeoJSON Data
 
-The two GeoJSON files (`geojson_files/yeg_neigh.geojson` and `geojson_files/yeg_slga.geojson`), which are Edmonton neighborhood boundaries and SLGA boundaries downloaded from the Edmonton City Open Data Portaland AHS's Geographic Information Systems (GIS). However, they both reflect the current reality of Edmonton neighborhoods and SLGAs, which may not completely align with their geographical boundaries in 2016.
+The two GeoJSON files (`geojson_files/yeg_neigh.geojson` and `geojson_files/yeg_slga.geojson`), which are Edmonton neighborhood boundaries and SLGA boundaries downloaded from the Edmonton City Open Data Portal and AHS' Geographic Information Systems (GIS). However, they both reflect the current reality of Edmonton neighborhoods and SLGAs, which may not completely align with their geographical boundaries in 2016.
 
 ## The Spatial Mismatch Problem
 
@@ -240,21 +240,26 @@ map_residuals_binned |>
   )
 ```
 
-Based on the side-by-side comparison plot, zone seems to have the lowest hypertension prevalence and highest household income among the SLGA zones. On the other hand, Abbottsfield has the second highest hypertension prevalence with the lowest household income. The spatial residual plot shows that most neighborhoods have hypertension prevalence rates expected by the model. However, there are a few neighborhoods that are off by more than one standard deviation of the model residuals.
+Based on the side-by-side comparison plot, zone seems to have the lowest hypertension prevalence and highest household income among the SLGA zones. On the other hand, Abbottsfield has the second highest hypertension prevalence with the lowest household income. Some zones with low hypertension prevalence tend to cluster around the central part of Edmonton. The spatial residual plot shows that most neighborhoods have hypertension prevalence rates expected by the model. However, there are a few neighborhoods that are off by more than one standard deviation of the model residuals.
 
 # Discussions
 
-#1 Conclusions
+Overall, there's a negative relationship between household income and hypertension prevalence in Edmonton neighborhoods and zones. However, the magnitude of the relationship isn't that evident due to relatively small variance in age- and sex-standardized hypertension prevalence rates to begin with. One thing that is worth noting is that the data are all aggregated at either neighborhood or zone level, meaning that no inference should be drawn at individual-level to avoid ecological fallacy.
 
-```{r}
-1 + 1
-```
+# Limitations
 
-You can add options to executable code like this
+Several limitations exist for this analysis besides the aforementioned spatial mismatched between predictor and outcome data. First of all, the data analyzed are from 2016 and the might differ from today's reality, of which one aspect is the reclassified/expanded neighborhoods and zones in the current jeoJSON files used to create the crosswalk. In addition, though the prevalence is age- and sex-standardized, income is the only predictor and mostly likely the only factor that influences hypertension prevalence. Another problem is that household income data are from census and binned. Mid-points of bins as well as 1.25 times the lower boundary of the top open-ended bin are used as a rough estimate for average income calculation, but they might be susceptible to measurement errors.
 
-```{r}
-#| echo: false
-2 * 2
-```
+# Conclusions
 
-The `echo: false` option disables the printing of code (only output is displayed).
+In conclusion, this mini self-directed spatial analysis projects illustrates the negative relationship between household income and hypertension prevalence in Edmonton in the year 2016. It helps the author practice the whole GitHub workflow, exercise data analytics techniques, and barely adds anything to the abundant current literature on health inequity. Follow-up analyses after the most up-to-date are made available could be an interesting next-step to examine whether this inequity is amplified or alleviated in 2026.
+
+# References
+
+Alberta IHDA: <http://www.ahw.gov.ab.ca/IHDA_Retrieval/>
+
+AHS Geographical Information Systems: <https://ahs-geographic-information-systems-ahs.hub.arcgis.com/>
+
+City of Edmonton Open Data Census: <https://data.edmonton.ca/Census/2016-Census-Population-by-Household-Income-Neighbo/jkjx-2hix/about_data>
+
+City of Edmonton Open Data Neighborhood Boundaries: <https://data.edmonton.ca/City-Administration/City-of-Edmonton-Neighbourhoods/65fr-66s6/about_data>
