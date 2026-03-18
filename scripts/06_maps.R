@@ -81,6 +81,7 @@ map_residuals_binned <- map_residuals |>
     residuals_binned = addNA(residuals_binned)
   )
 levels(map_residuals_binned$residuals_binned)[is.na(levels(map_residuals_binned$residuals_binned))] <- "No Data"
+write_rds(map_residuals_binned, "data/data_clean/residuals_data")
   # Plot the residual map
 p3 <- map_residuals_binned |> 
   ggplot() +
