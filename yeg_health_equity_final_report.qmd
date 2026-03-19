@@ -168,6 +168,13 @@ library(knitr)
 yeg_model_robust <- read_rds("output/yeg_model_robust.rds")
 yeg_model_robust |>
   tidy() |> 
+  rename(
+    Term = term,
+    Estimate = estimate,
+    Std.err = std.error,
+    Statistic = statistic,
+    P_value = p.value
+  ) |> 
   kable(digits = 5)
 ```
 
