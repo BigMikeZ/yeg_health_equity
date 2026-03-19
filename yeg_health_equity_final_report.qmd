@@ -4,6 +4,8 @@ author: "Mike Zhang"
 date: 2026-03-16
 format: 
   html:
+    embed-resources: true
+    output-file: "index.html"
     toc: true
     toc-depth: 3
     toc-title: "Content"
