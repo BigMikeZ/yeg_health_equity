@@ -67,7 +67,7 @@ yeg_weighted_aggregated_model <- lm(age_standardize_rate ~ weighted_average_inco
                           weights = population 
                          )
 summary(yeg_weighted_aggregated_model)
-png("output/weighted_aggregate_diagnostic_plots.png", width = 800, height = 600)
+png("output/weighted_aggregate_diagnostic_plots.png")
 par(mfrow = c(2, 2))
 yeg_aggregate_model_diagnostics <- plot(yeg_weighted_aggregated_model)
 dev.off()

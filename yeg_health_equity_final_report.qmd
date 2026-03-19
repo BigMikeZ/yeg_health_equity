@@ -94,9 +94,7 @@ A clustered robust standard error approach is conducted on the original simple l
 
 ## Residual Mapping
 
-Thanks to the geoJSON files, a spatial residual plot is made to display model performance geographically. By binning the model residuals based on the standard deviation (± 1 SD of residuals), I then created the map where SLGAs with hypertension rate higher or lower than what the model predicts are highlighted by different colors.
-
-![Spatial residual mapping](output/residual_map.png)
+Thanks to the geoJSON files, a spatial residual plot is made to display model performance geographically. By binning the model residuals based on the standard deviation (± 1 SD of residuals), I then created the map where SLGAs with hypertension rate higher or lower than what the model predicts are highlighted by different colors, which will be showed in the Spatial Patterns section. 
 
 # Results
 
@@ -141,10 +139,10 @@ yeg_joined |>
   geom_smooth(method = "lm", se = FALSE) +
   scale_x_continuous(
     breaks = seq(25000, 200000, by = 25000),
-    labels = label_dollar()
+    labels = scales::label_dollar()
   ) +
   scale_y_continuous(
-    labels = label_percent()
+    labels = scales::label_percent()
   ) +
   theme(legend.position = "none") +
   labs(
@@ -188,7 +186,7 @@ Results of the final regression model using the clustered robust standard error 
 #| fig-width: 12
 library(sf)
 library(patchwork)
-neigh <- st_read("geojson_files/yeg_neigh.geojson") 
+neigh <- st_read("geojson_files/yeg_neigh.geojson", quiet = TRUE) 
 yeg_joined <- yeg_joined |> 
   mutate(neighbourhood_number = as.character(neighbourhood_number))
 map_data <- neigh |> 
