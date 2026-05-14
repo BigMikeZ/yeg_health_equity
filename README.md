@@ -1,5 +1,5 @@
 # Edmonton Health Equity: A Spatial Analysis of Income and Hypertension
-**Author:** Mike Zhang
+**Author:** Mike Zhang — [GitHub](https://github.com/BigMikeZ)
 
 ## Project Overview
 For my first-ever formal GitHub repository AND self-directed data analytics project, the goal is to practice the whole GitHub workflow while analyzing the relationship between neighborhood socioeconomic status (income) and chronic health outcomes (hypertension) in Edmonton, AB.
@@ -38,4 +38,14 @@ The core challenge involved in the project is **mismatched spatial data** betwee
     * https://data.edmonton.ca/Census/2016-Census-Population-by-Household-Income-Neighbo/jkjx-2hix/about_data 
     * http://www.ahw.gov.ab.ca/IHDA_Retrieval/selectCategory.do 
 
-
+## Repository Structure
+```
+yeg_health_equity/
+├── data/
+│   ├── data_raw/        # Original unmodified data files
+│   └── data_clean/      # Processed .rds files output by scripts
+├── geojson_files/       # Neighborhood and SLGA boundary files
+├── scripts/             # Run in order (01 → 06) before rendering report
+├── output/              # Figures and model objects
+└── docs/                # Final report rendered as HTML
+```
